@@ -1,5 +1,12 @@
 "use strict";
 
+/** User class for message.ly */
+
+const bcrypt = require("bcrypt");
+// const { NotFoundError } = require("../expressError");
+const db = require("../db");
+const { BCRYPT_WORK_FACTOR } = require("../config");
+
 /** User of the site. */
 
 class User {
@@ -9,6 +16,20 @@ class User {
    */
 
   static async register({ username, password, first_name, last_name, phone }) {
+    const hashedPass = await bcrypt.hash(
+      password, BCRYPT_WORK_FACTOR);
+
+    const result = await db.query(
+      `INSERT INTO users (username,
+                          password,
+                          first_name,
+                          last_name,
+                          phone)
+          VALUES ($1, $2, $3, $4, $5)
+          RETURNING username, password, first_name, last_name, phone)`,
+      [username, hashedPass, first_name, last_name, phone]);
+
+    return result.rows[0];
   }
 
   /** Authenticate: is username/password valid? Returns boolean. */
