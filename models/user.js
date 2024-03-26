@@ -30,7 +30,7 @@ class User {
           VALUES ($1, $2, $3, $4, $5, current_timestamp)
           RETURNING username, password, first_name, last_name, phone`,
       [username, hashedPass, first_name, last_name, phone,]);
-    console.log('register', result.rows[0]);
+
     return result.rows[0];
   }
 

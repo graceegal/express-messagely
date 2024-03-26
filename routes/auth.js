@@ -12,12 +12,12 @@ router.post("/login", async function (req, res) {
   if (req.body === undefined) throw new BadRequestError();
 
   const { username, password } = req.body;
-
+  //TODO: check the boolean val is === true
   if (await User.authenticate(username, password)) {
     await User.updateLoginTimestamp(username);
-    let _token = jwt.sign({ username }, SECRET_KEY);
+    let token = jwt.sign({ username }, SECRET_KEY);
 
-    return res.json({ _token });
+    return res.json({ token });
   } else {
     throw new UnauthorizedError('Invalid username/password');
   }
@@ -31,14 +31,13 @@ router.post("/login", async function (req, res) {
 router.post("/register", async function (req, res) {
   if (req.body === undefined) throw new BadRequestError();
 
-  const { username, password, first_name, last_name, phone } = req.body;
-  const user = await User.register({ username, password, first_name, last_name, phone });
+  const user = await User.register(req.body);
 
   let payload = { username: user.username };
 
-  let _token = jwt.sign(payload, SECRET_KEY);
+  let token = jwt.sign(payload, SECRET_KEY);
 
-  return res.json({ _token });
+  return res.json({ token });
 });
 
 
