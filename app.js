@@ -2,7 +2,6 @@
 
 /** Express app for message.ly. */
 
-
 const express = require("express");
 const cors = require("cors");
 const { authenticateJWT } = require("./middleware/auth");
@@ -30,6 +29,10 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);
 
+
+// app.get("/", function {
+//   return res.render("index.html")
+// });
 
 /** 404 handler: matches unmatched routes; raises NotFoundError. */
 app.use(function (req, res, next) {
