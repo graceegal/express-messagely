@@ -16,6 +16,7 @@ class User {
    */
 
   static async register({ username, password, first_name, last_name, phone }) {
+
     const hashedPass = await bcrypt.hash(
       password, BCRYPT_WORK_FACTOR);
 
@@ -29,7 +30,7 @@ class User {
           VALUES ($1, $2, $3, $4, $5, current_timestamp)
           RETURNING username, password, first_name, last_name, phone`,
       [username, hashedPass, first_name, last_name, phone,]);
-
+    console.log('register', result.rows[0]);
     return result.rows[0];
   }
 
